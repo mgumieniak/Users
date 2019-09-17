@@ -1,14 +1,15 @@
 package com.database.users.model.dto;
 
 import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDate;
 
-@Data
+@Value
 public class UserDTO {
-    private String name;
-    private String surname;
-    private String email;
-    private String phoneNumber;
-    private LocalDate creationAccountDate;
+    private final String name;
+    private final String surname;
+    private final String email;
+    private final String phoneNumber;
+    private final LocalDate creationAccountDate;
 }

@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -26,8 +27,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> getUserByUserId(String userId) {
-        return userRepository.findById(userId);
+    public Optional<UserDTO> getUserByUserId(String userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return mapOptionalUser(user);
+    }
+
+    private Optional<UserDTO> mapOptionalUser(Optional<User> user){
+        Type optionalType= new TypeToken<Optional<UserDTO>>(){
+        }.getType();
+        return mapper.map(user, optionalType);
     }
 
     public List<UserDTO> getUsers(int page, int size, String direction, String... properties) {
@@ -48,8 +56,13 @@ public class UserService {
         return mapper.map(users, listType);
     }
 
-    public UserDTO createUser(User user) {
-        user.setCreationAccountDate(LocalDate.now());
+    public UserDTO createUser(UserDTO userToCreate) {
+//        user.setCreationAccountDate(LocalDate.now());
+//        userRepository.save(user);
+        User user = mapper.map(userToCreate,User.class);
+        User user2 = new User.Builder(user,
+                UUID.randomUUID().toString(),
+                LocalDate.now()).build();
         userRepository.save(user);
         return mapper.map(user, UserDTO.class);
     }

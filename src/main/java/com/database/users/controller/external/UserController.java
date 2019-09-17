@@ -24,9 +24,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("{/id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        return userService.getUserByUserId(id)
+    @GetMapping("{/userId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
+        return userService.getUserByUserId(userId)
                 .map(user -> ResponseEntity.ok().body(user))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -58,7 +58,20 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody User user) {
+    public UserDTO createUser(@RequestBody UserDTO user) {
         return userService.createUser(user);
     }
+
+//    @PatchMapping(path = "/userId", consumes = "application/json")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public UserDTO patchUser(@PathVariable("userId") String userId,
+//                             @RequestBody UserDTO patch){
+//        return userService.getUserByUserId(userId)
+//                .map(userToUpdate -> )
+//
+//    }
+//
+//    private void patchUser(UserDTO patch, UserDTO userToUpdate){
+//
+//    }
 }
