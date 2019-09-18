@@ -19,16 +19,17 @@ public class Mapper {
     private void applyOwnMapRules(ModelMapper mapper) {
         mapper.createTypeMap(UserDTO.class, User.class).setProvider(
                 request -> {
-                    UserDTO u = UserDTO.class.cast(request.getSource());
+                    UserDTO u = (UserDTO) request.getSource();
                     return new User.Builder(u.getName(), u.getSurname(),
-                            u.getEmail(), u.getPhoneNumber(),
-                            u.getCreationAccountDate()).build();
+                            u.getEmail(), u.getCreationAccountDate())
+                            .phoneNumber(u.getPhoneNumber())
+                            .build();
                 }
         );
 
         mapper.createTypeMap(User.class, UserDTO.class).setProvider(
                 request -> {
-                    User u = User.class.cast(request.getSource());
+                    User u = (User) request.getSource();
                     return new UserDTO(u.getName(), u.getSurname(),
                             u.getEmail(), u.getPhoneNumber(),
                             u.getCreationAccountDate());

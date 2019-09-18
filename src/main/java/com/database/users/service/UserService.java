@@ -51,16 +51,17 @@ public class UserService {
     }
 
     private List<UserDTO> mapList(List<User> users) {
-        Type listType = new TypeToken<Iterable<UserDTO>>() {
+        Type listType = new TypeToken<List<UserDTO>>() {
         }.getType();
         return mapper.map(users, listType);
     }
 
     public UserDTO createUser(UserDTO userToCreate) {
         User user = mapper.map(userToCreate,User.class);
-        user = new User.Builder(user,
-                UUID.randomUUID().toString(),
-                LocalDate.now()).build();
+        user = new User.Builder(user.getName(),user.getSurname(),
+                user.getEmail(), LocalDate.now())
+                .phoneNumber(user.getPhoneNumber())
+                .build();
         userRepository.save(user);
         return mapper.map(user, UserDTO.class);
     }

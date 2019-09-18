@@ -1,32 +1,27 @@
 package com.database.users.model.entity;
 
-import com.database.users.model.dto.UserDTO;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@RequiredArgsConstructor
 @Document
-public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class User {
     @Id
     private String userId;
-    private final String name;
-    private final String surname;
-    private final String email;
-    private final String phoneNumber;
-    private final LocalDate creationAccountDate;
+    private String name;
+    private String surname;
+    private String email;
+    private String phoneNumber;
+    private LocalDate creationAccountDate;
 
-    public User(Builder builder) {
-        userId = builder.userId;
+
+    private User(Builder builder) {
         name = builder.name;
         surname = builder.surname;
         email = builder.email;
@@ -40,24 +35,14 @@ public class User implements Serializable {
         private final String email;
         private final LocalDate creationAccountDate;
 
-        private String userId = "";
         private String phoneNumber = "";
 
-        public Builder(String name, String surname, String email, String phoneNumber, LocalDate creationAccountDate) {
+        public Builder(String name, String surname, String email, LocalDate creationAccountDate) {
             this.name = name;
             this.surname = surname;
             this.email = email;
             this.creationAccountDate = creationAccountDate;
         }
-
-        public Builder(User user, String userId, LocalDate creationAccountDate) {
-            this.userId = userId;
-            this.name = user.getName();
-            this.surname = user.surname;
-            this.email = user.email;
-            this.creationAccountDate = creationAccountDate;
-        }
-
 
         public Builder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;

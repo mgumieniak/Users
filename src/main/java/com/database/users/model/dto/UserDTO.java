@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 public class UserDTO {
