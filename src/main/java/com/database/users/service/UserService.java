@@ -8,13 +8,13 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -27,15 +27,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<UserDTO> getUserByUserId(String userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return mapOptionalUser(user);
-    }
-
-    private Optional<UserDTO> mapOptionalUser(Optional<User> user){
-        Type optionalType= new TypeToken<Optional<UserDTO>>(){
-        }.getType();
-        return mapper.map(user, optionalType);
+    public ResponseEntity<UserDTO> getUserByUserId(String userId) {
+        return userRepository.findById(userId)
+                .map(user ->
+                        ResponseEntity.ok().body(mapper.map(user,UserDTO.class)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public List<UserDTO> getUsers(int page, int size, String direction, String... properties) {
@@ -57,9 +53,19 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userToCreate) {
-        User user = mapper.map(userToCreate,User.class);
-        user = new User.Builder(user.getName(),user.getSurname(),
+        User user = mapper.map(userToCreate, User.class);
+        user = new User.Builder(user.getName(), user.getSurname(),
                 user.getEmail(), LocalDate.now())
+                .phoneNumber(user.getPhoneNumber())
+                .build();
+        userRepository.save(user);
+        return mapper.map(user, UserDTO.class);
+    }
+
+    public UserDTO updateUser(UserDTO userToUpdate) {
+        User user = mapper.map(userToUpdate, User.class);
+        user = new User.Builder(user.getName(), user.getSurname(),
+                user.getEmail(), user.getCreationAccountDate())
                 .phoneNumber(user.getPhoneNumber())
                 .build();
         userRepository.save(user);

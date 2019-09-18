@@ -1,7 +1,6 @@
 package com.database.users.controller.external;
 
 import com.database.users.model.dto.UserDTO;
-import com.database.users.model.entity.User;
 import com.database.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +23,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("{/userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
-        return userService.getUserByUserId(userId)
-                .map(user -> ResponseEntity.ok().body(user))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return userService.getUserByUserId(userId);
+
     }
 
     @GetMapping()
@@ -46,7 +44,7 @@ public class UserController {
         return sortDependingOfProperties(page, limit, sortDirection, properties);
     }
 
-    private List<UserDTO> sortDependingOfProperties(int page, int limit, String sortDirection, String... properties) {
+    private List<UserDTO> sortDependingOfProperties(int page, int limit, String sortDirection,String... properties) {
         List<UserDTO> users;
         if (properties.length == 0) {
             users = userService.getUsers(page, limit);
@@ -62,16 +60,48 @@ public class UserController {
         return userService.createUser(user);
     }
 
-//    @PatchMapping(path = "/userId", consumes = "application/json")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public UserDTO patchUser(@PathVariable("userId") String userId,
+//    @PatchMapping(path = "/{userId}", consumes = "application/json")
+//    public ResponseEntity<UserDTO> patchUser(@PathVariable("userId") String userId,
 //                             @RequestBody UserDTO patch){
 //        return userService.getUserByUserId(userId)
-//                .map(userToUpdate -> )
-//
+//                .map(userToUpdate -> ResponseEntity.ok().body(patchUser(patch, userToUpdate)))
+//                .orElseGet(()-> ResponseEntity.notFound().build());
 //    }
-//
-//    private void patchUser(UserDTO patch, UserDTO userToUpdate){
-//
-//    }
+
+    private UserDTO patchUser(UserDTO patch, UserDTO userToUpdate){
+
+        UserDTO.Builder builder;
+        if (patch.getCreationAccountDate() != null){
+            builder = new UserDTO.Builder(patch.getCreationAccountDate());
+        }else{
+            builder = new UserDTO.Builder(userToUpdate.getCreationAccountDate());
+        }
+
+        if (patch.getName() != null){
+            builder.name(patch.getName());
+        }else{
+            builder.name(userToUpdate.getName());
+        }
+
+        if (patch.getSurname() != null){
+            builder.surname(patch.getSurname());
+        }else{
+            builder.name(userToUpdate.getName());
+        }
+
+        if (patch.getEmail() != null){
+            builder.email(patch.getEmail());
+        }else{
+            builder.name(userToUpdate.getEmail());
+        }
+
+        if (patch.getPhoneNumber() != null){
+            builder.phoneNumber(patch.getName());
+        }else{
+            builder.name(userToUpdate.getName());
+        }
+
+        UserDTO userToSave = builder.build();
+        return userService.updateUser(userToSave);
+    }
 }

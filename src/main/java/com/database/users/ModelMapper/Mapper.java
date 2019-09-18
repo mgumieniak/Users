@@ -30,9 +30,12 @@ public class Mapper {
         mapper.createTypeMap(User.class, UserDTO.class).setProvider(
                 request -> {
                     User u = (User) request.getSource();
-                    return new UserDTO(u.getName(), u.getSurname(),
-                            u.getEmail(), u.getPhoneNumber(),
-                            u.getCreationAccountDate());
+                    return new UserDTO.Builder(u.getCreationAccountDate())
+                            .name(u.getName())
+                            .surname(u.getSurname())
+                            .email(u.getEmail())
+                            .phoneNumber(u.getPhoneNumber())
+                            .build();
                 }
         );
     }
