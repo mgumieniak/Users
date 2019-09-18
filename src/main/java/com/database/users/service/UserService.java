@@ -57,10 +57,8 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userToCreate) {
-//        user.setCreationAccountDate(LocalDate.now());
-//        userRepository.save(user);
         User user = mapper.map(userToCreate,User.class);
-        User user2 = new User.Builder(user,
+        user = new User.Builder(user,
                 UUID.randomUUID().toString(),
                 LocalDate.now()).build();
         userRepository.save(user);

@@ -1,14 +1,18 @@
 package com.database.users.model.entity;
 
+import com.database.users.model.dto.UserDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Value
+@Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@RequiredArgsConstructor
 @Document
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -43,7 +47,6 @@ public class User implements Serializable {
             this.name = name;
             this.surname = surname;
             this.email = email;
-            this.phoneNumber = phoneNumber;
             this.creationAccountDate = creationAccountDate;
         }
 
@@ -52,9 +55,9 @@ public class User implements Serializable {
             this.name = user.getName();
             this.surname = user.surname;
             this.email = user.email;
-            this.phoneNumber = user.phoneNumber;
             this.creationAccountDate = creationAccountDate;
         }
+
 
         public Builder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;

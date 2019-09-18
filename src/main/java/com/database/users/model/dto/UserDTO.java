@@ -1,11 +1,12 @@
 package com.database.users.model.dto;
 
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Value
+@Data
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@RequiredArgsConstructor
 public class UserDTO {
     private final String name;
     private final String surname;

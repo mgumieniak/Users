@@ -2,29 +2,37 @@ package com.database.users.ModelMapper;
 
 import com.database.users.model.dto.UserDTO;
 import com.database.users.model.entity.User;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-
+@Configuration
 public class Mapper {
 
-    public static User map(UserDTO userDTO){
-        return new User.Builder(userDTO.getName(),userDTO.getSurname(),
-                userDTO.getEmail(),userDTO.getPhoneNumber(),userDTO.getCreationAccountDate())
-                .phoneNumber(userDTO.getPhoneNumber()).build();
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        applyOwnMapRules(mapper);
+        return mapper;
     }
 
-    public static UserDTO map(User user){
-        return new UserDTO(user.getName(),user.getSurname(),
-                user.getEmail(),user.getPhoneNumber(),user.getCreationAccountDate());
+    private void applyOwnMapRules(ModelMapper mapper) {
+        mapper.createTypeMap(UserDTO.class, User.class).setProvider(
+                request -> {
+                    UserDTO u = UserDTO.class.cast(request.getSource());
+                    return new User.Builder(u.getName(), u.getSurname(),
+                            u.getEmail(), u.getPhoneNumber(),
+                            u.getCreationAccountDate()).build();
+                }
+        );
+
+        mapper.createTypeMap(User.class, UserDTO.class).setProvider(
+                request -> {
+                    User u = User.class.cast(request.getSource());
+                    return new UserDTO(u.getName(), u.getSurname(),
+                            u.getEmail(), u.getPhoneNumber(),
+                            u.getCreationAccountDate());
+                }
+        );
     }
-
-    public  List<BasicUser> map(List<BasicUser> usersDTO){
-        return usersDTO.stream().map(Mapper::)
-                .collect(Collectors.toList());
-    }
-
-
-
 }
