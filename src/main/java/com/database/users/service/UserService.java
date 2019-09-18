@@ -27,12 +27,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<UserDTO> getUserByUserId(String userId) {
+    public Optional<UserDTO> getUserByUserId(String userId) {
         return userRepository.findById(userId)
-                .map(user ->
-                        ResponseEntity.ok().body(mapper.map(user,UserDTO.class)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(user -> mapper.map(user, UserDTO.class));
     }
+
 
     public List<UserDTO> getUsers(int page, int size, String direction, String... properties) {
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), properties);

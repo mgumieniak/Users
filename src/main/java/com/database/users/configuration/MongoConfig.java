@@ -22,9 +22,7 @@ public class MongoConfig {
         this.mongoMappingContext = mongoMappingContext;
     }
 
-    /*
-        Delete class name from datebase
-    */
+
     @Bean
     public MappingMongoConverter mappingMongoConverter() {
         DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);

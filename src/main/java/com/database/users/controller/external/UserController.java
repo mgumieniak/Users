@@ -25,8 +25,9 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
-        return userService.getUserByUserId(userId);
-
+        return userService.getUserByUserId(userId)
+                .map(user -> ResponseEntity.ok().body(user))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping()
@@ -63,7 +64,8 @@ public class UserController {
 //    @PatchMapping(path = "/{userId}", consumes = "application/json")
 //    public ResponseEntity<UserDTO> patchUser(@PathVariable("userId") String userId,
 //                             @RequestBody UserDTO patch){
-//        return userService.getUserByUserId(userId)
+//         userService.getUserByUserId(userId)
+//
 //                .map(userToUpdate -> ResponseEntity.ok().body(patchUser(patch, userToUpdate)))
 //                .orElseGet(()-> ResponseEntity.notFound().build());
 //    }
