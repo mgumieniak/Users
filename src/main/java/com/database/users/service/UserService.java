@@ -3,9 +3,11 @@ package com.database.users.service;
 import com.database.users.model.dto.UserDTO;
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;
-import com.database.users.service.templateMethodSave.*;
+import com.database.users.service.templateMethodSave.Operation;
+import com.database.users.service.templateMethodSave.SaveOperation;
 import com.database.users.service.templateMethodSave.operations.Create;
 import com.database.users.service.templateMethodSave.operations.Patch;
+import com.database.users.service.templateMethodSave.operations.Save;
 import com.database.users.service.templateMethodSave.operations.Update;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -15,7 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -55,18 +58,20 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userToCreate) {
-        Operation createUser = new SaveOperation(new Create(mapper,userRepository));
+        Operation createUser = new SaveOperation(new Create(mapper, userRepository));
         return createUser.save(userToCreate);
     }
 
-    public UserDTO updateUser(UserDTO userToUpdate) {
-        Operation updateUser = new SaveOperation(new Update(mapper,userRepository));
+    public UserDTO updateUser(String userId, UserDTO userToUpdate) {
+        Operation updateUser = new SaveOperation(new Update(mapper, userRepository, userId));
         return updateUser.save(userToUpdate);
     }
 
-    public UserDTO patchUser(UserDTO userToUpdate) {
-        Operation patchUser = new SaveOperation(new Patch(mapper,userRepository));
-        return patchUser.save(userToUpdate);
+    public UserDTO patchUser(String userId, UserDTO patchUser, UserDTO userToUpdate) {
+        Patch patch = new Patch(mapper, userRepository, userId);
+        UserDTO userDTO = patch.patchUser(patchUser,userToUpdate);
+        Operation patchUserOperation = new SaveOperation(patch);
+        return patchUserOperation.save(userDTO);
     }
 
 }
