@@ -3,18 +3,19 @@ package com.database.users.service;
 import com.database.users.model.dto.UserDTO;
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;
+import com.database.users.service.templateMethodSave.*;
+import com.database.users.service.templateMethodSave.operations.Create;
+import com.database.users.service.templateMethodSave.operations.Patch;
+import com.database.users.service.templateMethodSave.operations.Update;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -33,8 +34,10 @@ public class UserService {
     }
 
 
-    public List<UserDTO> getUsers(int page, int size, String direction, String... properties) {
-        PageRequest pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), properties);
+    public List<UserDTO> getUsers(int page, int size,
+                                  String direction, String... properties) {
+        PageRequest pageable = PageRequest.of(page, size,
+                Sort.Direction.fromString(direction), properties);
         List<User> users = userRepository.findAll(pageable).getContent();
         return mapList(users);
     }
@@ -52,24 +55,18 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userToCreate) {
-        User user = mapper.map(userToCreate, User.class);
-        user = new User.Builder(user.getName(), user.getSurname(),
-                user.getEmail(), LocalDate.now())
-                .phoneNumber(user.getPhoneNumber())
-                .build();
-        userRepository.save(user);
-        return mapper.map(user, UserDTO.class);
+        Operation createUser = new SaveOperation(new Create(mapper,userRepository));
+        return createUser.save(userToCreate);
     }
 
     public UserDTO updateUser(UserDTO userToUpdate) {
-        User user = mapper.map(userToUpdate, User.class);
-        user = new User.Builder(user.getName(), user.getSurname(),
-                user.getEmail(), user.getCreationAccountDate())
-                .phoneNumber(user.getPhoneNumber())
-                .build();
-        userRepository.save(user);
-        return mapper.map(user, UserDTO.class);
+        Operation updateUser = new SaveOperation(new Update(mapper,userRepository));
+        return updateUser.save(userToUpdate);
     }
 
+    public UserDTO patchUser(UserDTO userToUpdate) {
+        Operation patchUser = new SaveOperation(new Patch(mapper,userRepository));
+        return patchUser.save(userToUpdate);
+    }
 
 }

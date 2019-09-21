@@ -22,6 +22,7 @@ public class User {
 
 
     private User(Builder builder) {
+        userId = builder.userId;
         name = builder.name;
         surname = builder.surname;
         email = builder.email;
@@ -35,6 +36,7 @@ public class User {
         private final String email;
         private final LocalDate creationAccountDate;
 
+        private String userId = null;
         private String phoneNumber = "";
 
         public Builder(String name, String surname, String email, LocalDate creationAccountDate) {
@@ -42,6 +44,11 @@ public class User {
             this.surname = surname;
             this.email = email;
             this.creationAccountDate = creationAccountDate;
+        }
+
+        public Builder userId(String userId) {
+            this.userId = userId;
+            return this;
         }
 
         public Builder phoneNumber(String phoneNumber) {
