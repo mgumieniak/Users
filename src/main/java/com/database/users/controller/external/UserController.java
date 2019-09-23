@@ -1,5 +1,6 @@
 package com.database.users.controller.external;
 
+import com.database.users.error.UserNotFoundException;
 import com.database.users.model.dto.UserDTO;
 import com.database.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
         return userService.getUserByUserId(userId)
                 .map(user -> ResponseEntity.ok().body(user))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new UserNotFoundException("Not found user with id: " + userId));
     }
 
     @GetMapping()
@@ -41,7 +42,6 @@ public class UserController {
 
         List<String> propertyList = Arrays.asList(name, surname, email, creationAccountDate);
         String[] properties = propertyList.stream().filter(Objects::nonNull).toArray(String[]::new);
-
         return sortDependingOfProperties(page, limit, sortDirection, properties);
     }
 
@@ -73,7 +73,7 @@ public class UserController {
                                              @RequestBody UserDTO patchUser) {
         return userService.getUserByUserId(userId)
                 .map(userToUpdate -> ResponseEntity.status(201)
-                        .body(userService.patchUser(userId, patchUser ,userToUpdate)))
+                        .body(userService.patchUser(userId, patchUser, userToUpdate)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
