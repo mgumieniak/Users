@@ -1,6 +1,7 @@
 package com.database.users.auth;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -38,19 +40,17 @@ public class AuthTokenSecurityConfig extends WebSecurityConfigurerAdapter {
 
         httpSecurity.
                 antMatcher("/api/**")
-                .csrf()
-                .disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(filter)
-                .addFilterBefore(new ExceptionTranslationFilter(
-                                new Http403ForbiddenEntryPoint()),
-                        filter.getClass()
-                )
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated();
+
+        httpSecurity
+                .exceptionHandling()
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
 
 }
