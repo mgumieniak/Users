@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +39,8 @@ public class UserController {
                                   @RequestParam(required = false) String surname,
                                   @RequestParam(required = false) String email,
                                   @RequestParam(required = false) String creationAccountDate,
-                                  @RequestParam(defaultValue = "DESC") String sortDirection) {
+                                  @RequestParam(defaultValue = "DESC") String sortDirection,
+                                  Principal user) {
 
         List<String> propertyList = Arrays.asList(name, surname, email, creationAccountDate);
         String[] properties = propertyList.stream().filter(Objects::nonNull).toArray(String[]::new);

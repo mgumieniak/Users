@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class User {
     @Id
     private String userId;
+
     private String name;
     private String surname;
     private String email;
