@@ -23,6 +23,8 @@ public class Update extends AbstractSave {
                 user.getEmail(), user.getCreationAccountDate())
                 .userId(this.getUserId())
                 .phoneNumber(user.getPhoneNumber())
+                .permissions(user.getPermissions())
+                .roles(user.getRoles())
                 .build();
     }
 

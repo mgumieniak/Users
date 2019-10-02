@@ -24,6 +24,8 @@ public class Patch extends AbstractSave {
                 user.getEmail(), user.getCreationAccountDate())
                 .phoneNumber(user.getPhoneNumber())
                 .userId(this.getUserId())
+                .roles(user.getRoles())
+                .permissions(user.getPermissions())
                 .build();
     }
 
@@ -45,19 +47,31 @@ public class Patch extends AbstractSave {
         if (patch.getSurname() != null) {
             builder.surname(patch.getSurname());
         } else {
-            builder.name(userToUpdate.getName());
+            builder.surname(userToUpdate.getSurname());
         }
 
         if (patch.getEmail() != null) {
             builder.email(patch.getEmail());
         } else {
-            builder.name(userToUpdate.getEmail());
+            builder.email(userToUpdate.getEmail());
         }
 
         if (patch.getPhoneNumber() != null) {
             builder.phoneNumber(patch.getPhoneNumber());
         } else {
-            builder.name(userToUpdate.getPhoneNumber());
+            builder.phoneNumber(userToUpdate.getPhoneNumber());
+        }
+
+        if (patch.getPermissions() != null) {
+            builder.permissions(patch.getPermissions());
+        } else {
+            builder.permissions(userToUpdate.getPermissions());
+        }
+
+        if (patch.getRoles() != null) {
+            builder.roles(patch.getRoles());
+        } else {
+            builder.roles(userToUpdate.getRoles());
         }
 
         return builder.build();

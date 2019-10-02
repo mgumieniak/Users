@@ -1,6 +1,11 @@
 package com.database.users.model.dto;
 
-import lombok.*;
+import com.database.users.model.Permissions;
+import com.database.users.model.Roles;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -12,6 +17,8 @@ public class UserDTO {
     private final String surname;
     private final String email;
     private final String phoneNumber;
+    private final String roles;
+    private final String permissions;
     private final LocalDate creationAccountDate;
 
     private UserDTO(Builder builder){
@@ -19,6 +26,8 @@ public class UserDTO {
         surname = builder.surname;
         email = builder.email;
         phoneNumber = builder.phoneNumber;
+        roles = builder.roles;
+        permissions = builder.permissions;
         creationAccountDate = builder.creationAccountDate;
     }
 
@@ -29,6 +38,8 @@ public class UserDTO {
         private String surname = "";
         private String email = "";
         private String phoneNumber = "";
+        private String roles = Roles.USER.toString();
+        private String permissions = Permissions.STANDARD.toString();
 
         public Builder(LocalDate creationAccountDate) {
             this.creationAccountDate = creationAccountDate;
@@ -51,6 +62,16 @@ public class UserDTO {
 
         public Builder phoneNumber(String phoneNumber){
             this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public Builder roles(String roles){
+            this.roles = roles;
+            return this;
+        }
+
+        public Builder permissions(String permissions){
+            this.permissions = permissions;
             return this;
         }
 

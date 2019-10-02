@@ -12,7 +12,7 @@ public class Operation {
     private final UnaryOperator<User> save;
     private final Function<User, UserDTO> mapToUserDTO;
 
-    public Operation(Function<UserDTO, User> mapToUser, UnaryOperator<User> addField,
+    protected Operation(Function<UserDTO, User> mapToUser, UnaryOperator<User> addField,
                      UnaryOperator<User> save, Function<User, UserDTO> mapToUserDTO) {
         this.mapToUser = mapToUser;
         this.addField = addField;

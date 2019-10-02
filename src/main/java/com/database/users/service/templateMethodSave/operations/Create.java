@@ -17,6 +17,8 @@ public class Create extends AbstractSave {
         return new User.Builder(user.getName(), user.getSurname(),
                 user.getEmail(), LocalDate.now())
                 .phoneNumber(user.getPhoneNumber())
+                .roles(user.getRoles())
+                .permissions(user.getPermissions())
                 .build();
     }
 }
