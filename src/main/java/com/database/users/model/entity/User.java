@@ -1,28 +1,33 @@
 package com.database.users.model.entity;
 
-import com.database.users.model.Permissions;
-import com.database.users.model.Roles;
+import com.database.models.security.Permissions;
+import com.database.models.security.Roles;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@Document
+@Entity
 public class User {
+
     @Id
-    private String userId;
-    private String name;
-    private String surname;
-    private String email;
-    private String phoneNumber;
-    private Roles roles;
-    private Permissions permissions;
-    private LocalDate creationAccountDate;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private final Long userId;
+
+    private final String name;
+    private final String surname;
+    private final String email;
+    private final String phoneNumber;
+    private final Roles roles;
+    private final Permissions permissions;
+    private final LocalDate creationAccountDate;
 
 
     private User(Builder builder) {
@@ -42,7 +47,7 @@ public class User {
         private final String email;
         private final LocalDate creationAccountDate;
 
-        private String userId = null;
+        private Long userId = null;
         private Roles roles = Roles.USER;
         private Permissions permissions = Permissions.STANDARD;
         private String phoneNumber = "";
@@ -54,7 +59,7 @@ public class User {
             this.creationAccountDate = creationAccountDate;
         }
 
-        public Builder userId(String userId) {
+        public Builder userId(Long userId) {
             this.userId = userId;
             return this;
         }

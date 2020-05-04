@@ -1,6 +1,6 @@
-package com.database.users.service.templateMethodSave.operations;
+package com.database.users.utils.templateMethodSave.operations;
 
-import com.database.users.model.dto.UserDTO;
+import com.database.users.model.dto.UserDto;
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -23,19 +23,19 @@ public class Patch extends AbstractSave {
         return new User.Builder(user.getName(), user.getSurname(),
                 user.getEmail(), user.getCreationAccountDate())
                 .phoneNumber(user.getPhoneNumber())
-                .userId(this.getUserId())
+//                .userId(this.getUserId())
                 .roles(user.getRoles())
                 .permissions(user.getPermissions())
                 .build();
     }
 
-    public UserDTO patchUser(UserDTO patch, UserDTO userToUpdate) {
+    public UserDto patchUser(UserDto patch, UserDto userToUpdate) {
 
-        UserDTO.Builder builder;
+        UserDto.Builder builder;
         if (patch.getCreationAccountDate() != null) {
-            builder = new UserDTO.Builder(patch.getCreationAccountDate());
+            builder = new UserDto.Builder(patch.getCreationAccountDate());
         } else {
-            builder = new UserDTO.Builder(userToUpdate.getCreationAccountDate());
+            builder = new UserDto.Builder(userToUpdate.getCreationAccountDate());
         }
 
         if (patch.getName() != null) {

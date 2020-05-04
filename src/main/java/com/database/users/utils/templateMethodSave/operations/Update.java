@@ -1,4 +1,4 @@
-package com.database.users.service.templateMethodSave.operations;
+package com.database.users.utils.templateMethodSave.operations;
 
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;
@@ -21,7 +21,7 @@ public class Update extends AbstractSave {
     public User operateAddField(User user) {
         return new User.Builder(user.getName(), user.getSurname(),
                 user.getEmail(), user.getCreationAccountDate())
-                .userId(this.getUserId())
+//                .userId(this.getUserId())
                 .phoneNumber(user.getPhoneNumber())
                 .permissions(user.getPermissions())
                 .roles(user.getRoles())

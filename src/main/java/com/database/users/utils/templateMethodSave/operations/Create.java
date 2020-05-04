@@ -1,4 +1,4 @@
-package com.database.users.service.templateMethodSave.operations;
+package com.database.users.utils.templateMethodSave.operations;
 
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;

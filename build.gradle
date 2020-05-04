@@ -1,6 +1,4 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.8.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
 }
 
@@ -8,37 +6,51 @@ group = 'com.database'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	springinstrument
+}
+
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
 ext {
-	set('springCloudVersion', "Greenwich.SR3")
+	mapstructVersion = '1.3.1.Final'
+	bootVersion = '2.2.2.RELEASE'
+	lombokVersion = '1.18.10'
 }
 
 dependencies {
-	compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.1.8.RELEASE'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	implementation 'org.springframework.boot:spring-boot-starter-quartz'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
 
-	// lombok
-	compileOnly 'org.projectlombok:lombok:1.18.8'
-	annotationProcessor 'org.projectlombok:lombok:1.18.8'
+	// security
+	implementation 'org.springframework.boot:spring-boot-starter-security:' + bootVersion
+	implementation 'com.auth0:java-jwt:3.8.3'
 
-	//ModelMapper
-	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.5'
+	// lombok     Please be aware that order is crucial
+	compileOnly 'org.projectlombok:lombok:' + lombokVersion
 
-	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+	// mapper
+	implementation "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
+	annotationProcessor 'org.projectlombok:lombok:' + lombokVersion
 
+	// own libraries
+	implementation 'com.database.common:library-common:1.0'
+	implementation 'com.database.models:library-models:1.0'
 
-}
+	// JAX-B dependencies for JDK 9+
+	implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+	implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
 }

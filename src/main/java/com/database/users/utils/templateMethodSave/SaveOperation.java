@@ -1,6 +1,6 @@
-package com.database.users.service.templateMethodSave;
+package com.database.users.utils.templateMethodSave;
 
-import com.database.users.service.templateMethodSave.operations.Save;
+import com.database.users.utils.templateMethodSave.operations.Save;
 
 public class SaveOperation extends Operation {
     public SaveOperation(Save save) {

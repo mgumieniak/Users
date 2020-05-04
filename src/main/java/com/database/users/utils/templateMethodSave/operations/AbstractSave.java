@@ -1,6 +1,6 @@
-package com.database.users.service.templateMethodSave.operations;
+package com.database.users.utils.templateMethodSave.operations;
 
-import com.database.users.model.dto.UserDTO;
+import com.database.users.model.dto.UserDto;
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -15,7 +15,7 @@ public abstract class AbstractSave implements Save {
     }
 
     @Override
-    public User operateMapToUser(UserDTO userDTO) {
+    public User operateMapToUser(UserDto userDTO) {
         return mapper.map(userDTO, User.class);
     }
 
@@ -28,8 +28,8 @@ public abstract class AbstractSave implements Save {
     }
 
     @Override
-    public UserDTO operateMapToUserDTO(User user) {
-        return mapper.map(user, UserDTO.class);
+    public UserDto operateMapToUserDTO(User user) {
+        return mapper.map(user, UserDto.class);
     }
 }
 

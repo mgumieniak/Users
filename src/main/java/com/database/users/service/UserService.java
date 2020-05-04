@@ -1,14 +1,13 @@
 package com.database.users.service;
 
-import com.database.users.model.dto.UserDTO;
+import com.database.users.model.dto.UserDto;
 import com.database.users.model.entity.User;
 import com.database.users.repository.UserRepository;
-import com.database.users.service.templateMethodSave.Operation;
-import com.database.users.service.templateMethodSave.SaveOperation;
-import com.database.users.service.templateMethodSave.operations.Create;
-import com.database.users.service.templateMethodSave.operations.Patch;
-import com.database.users.service.templateMethodSave.operations.Save;
-import com.database.users.service.templateMethodSave.operations.Update;
+import com.database.users.utils.templateMethodSave.Operation;
+import com.database.users.utils.templateMethodSave.SaveOperation;
+import com.database.users.utils.templateMethodSave.operations.Create;
+import com.database.users.utils.templateMethodSave.operations.Patch;
+import com.database.users.utils.templateMethodSave.operations.Update;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<UserDTO> getUserByUserId(String userId) {
+    public Optional<UserDto> getUserByUserId(String userId) {
         return userRepository.findById(userId)
-                .map(user -> mapper.map(user, UserDTO.class));
+                .map(user -> mapper.map(user, UserDto.class));
     }
 
 
-    public List<UserDTO> getUsers(int page, int size,
+    public List<UserDto> getUsers(int page, int size,
                                   String direction, String... properties) {
         PageRequest pageable = PageRequest.of(page, size,
                 Sort.Direction.fromString(direction), properties);
@@ -45,31 +44,31 @@ public class UserService {
         return mapList(users);
     }
 
-    public List<UserDTO> getUsers(int page, int size) {
+    public List<UserDto> getUsers(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         List<User> users = userRepository.findAll(pageable).getContent();
         return mapList(users);
     }
 
-    private List<UserDTO> mapList(List<User> users) {
-        Type listType = new TypeToken<List<UserDTO>>() {
+    private List<UserDto> mapList(List<User> users) {
+        Type listType = new TypeToken<List<UserDto>>() {
         }.getType();
         return mapper.map(users, listType);
     }
 
-    public UserDTO createUser(UserDTO userToCreate) {
+    public UserDto createUser(UserDto userToCreate) {
         Operation createUser = new SaveOperation(new Create(mapper, userRepository));
         return createUser.save(userToCreate);
     }
 
-    public UserDTO updateUser(String userId, UserDTO userToUpdate) {
+    public UserDto updateUser(String userId, UserDto userToUpdate) {
         Operation updateUser = new SaveOperation(new Update(mapper, userRepository, userId));
         return updateUser.save(userToUpdate);
     }
 
-    public UserDTO patchUser(String userId, UserDTO patchUser, UserDTO userToUpdate) {
+    public UserDto patchUser(String userId, UserDto patchUser, UserDto userToUpdate) {
         Patch patch = new Patch(mapper, userRepository, userId);
-        UserDTO userDTO = patch.patchUser(patchUser,userToUpdate);
+        UserDto userDTO = patch.patchUser(patchUser,userToUpdate);
         Operation patchUserOperation = new SaveOperation(patch);
         return patchUserOperation.save(userDTO);
     }

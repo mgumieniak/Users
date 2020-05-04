@@ -1,13 +1,14 @@
 package com.database.users.controller.external;
 
-import com.database.users.error.UserNotFoundException;
-import com.database.users.model.dto.UserDTO;
+import com.database.users.model.dto.UserDto;
 import com.database.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -25,15 +26,17 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable String userId) {
         return userService.getUserByUserId(userId)
                 .map(user -> ResponseEntity.ok().body(user))
-                .orElseThrow(() -> new UserNotFoundException("Not found user with id: " + userId));
+//                .orElseThrow(() -> new WebServerException(HttpStatus.BAD_REQUEST,"Not found user with id: " + userId));
+                .orElseThrow(() -> new IllegalArgumentException("error"));
     }
 
     @GetMapping()
-    public List<UserDTO> getUsers(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "2") int limit,
+    public List<UserDto> getUsers(
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "5") int limit,
                                   @RequestParam(required = false) String name,
                                   @RequestParam(required = false) String surname,
                                   @RequestParam(required = false) String email,
@@ -45,8 +48,8 @@ public class UserController {
         return sortDependingOfProperties(page, limit, sortDirection, properties);
     }
 
-    private List<UserDTO> sortDependingOfProperties(int page, int limit, String sortDirection, String... properties) {
-        List<UserDTO> users;
+    private List<UserDto> sortDependingOfProperties(int page, int limit, String sortDirection, String... properties) {
+        List<UserDto> users;
         if (properties.length == 0) {
             users = userService.getUsers(page, limit);
         } else {
@@ -57,20 +60,20 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody UserDTO user) {
+    public UserDto createUser(@Valid @RequestBody UserDto user) {
         return userService.createUser(user);
     }
 
     @PutMapping(path = "/{userId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO updateUser(@PathVariable("userId") String userId,
-                              @RequestBody UserDTO user) {
+    public UserDto updateUser(@PathVariable("userId") String userId,
+                              @RequestBody UserDto user) {
         return userService.updateUser(userId, user);
     }
 
     @PatchMapping(path = "/{userId}", consumes = "application/json")
-    public ResponseEntity<UserDTO> patchUser(@PathVariable("userId") String userId,
-                                             @RequestBody UserDTO patchUser) {
+    public ResponseEntity<UserDto> patchUser(@PathVariable("userId") String userId,
+                                             @RequestBody UserDto patchUser) {
         return userService.getUserByUserId(userId)
                 .map(userToUpdate -> ResponseEntity.status(201)
                         .body(userService.patchUser(userId, patchUser, userToUpdate)))

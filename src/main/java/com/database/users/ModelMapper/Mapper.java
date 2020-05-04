@@ -1,6 +1,6 @@
 package com.database.users.ModelMapper;
 
-import com.database.users.model.dto.UserDTO;
+import com.database.users.model.dto.UserDto;
 import com.database.users.model.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +17,9 @@ public class Mapper {
     }
 
     private void applyOwnMapRules(ModelMapper mapper) {
-        mapper.createTypeMap(UserDTO.class, User.class).setProvider(
+        mapper.createTypeMap(UserDto.class, User.class).setProvider(
                 request -> {
-                    UserDTO u = (UserDTO) request.getSource();
+                    UserDto u = (UserDto) request.getSource();
                     return new User.Builder(u.getName(), u.getSurname(),
                             u.getEmail(), u.getCreationAccountDate())
                             .phoneNumber(u.getPhoneNumber())
@@ -27,10 +27,10 @@ public class Mapper {
                 }
         );
 
-        mapper.createTypeMap(User.class, UserDTO.class).setProvider(
+        mapper.createTypeMap(User.class, UserDto.class).setProvider(
                 request -> {
                     User u = (User) request.getSource();
-                    return new UserDTO.Builder(u.getCreationAccountDate())
+                    return new UserDto.Builder(u.getCreationAccountDate())
                             .name(u.getName())
                             .surname(u.getSurname())
                             .email(u.getEmail())

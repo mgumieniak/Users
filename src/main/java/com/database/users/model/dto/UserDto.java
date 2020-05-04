@@ -1,27 +1,29 @@
 package com.database.users.model.dto;
 
-import com.database.users.model.Permissions;
-import com.database.users.model.Roles;
+import com.database.models.security.Permissions;
+import com.database.models.security.Roles;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import javax.validation.constraints.Email;
 import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
-public class UserDTO {
+public class UserDto {
     private final String name;
     private final String surname;
+    @Email
     private final String email;
     private final String phoneNumber;
     private final String roles;
     private final String permissions;
     private final LocalDate creationAccountDate;
 
-    private UserDTO(Builder builder){
+    private UserDto(Builder builder) {
         name = builder.name;
         surname = builder.surname;
         email = builder.email;
@@ -31,7 +33,7 @@ public class UserDTO {
         creationAccountDate = builder.creationAccountDate;
     }
 
-    public static class Builder{
+    public static class Builder {
         private final LocalDate creationAccountDate;
 
         private String name = "";
@@ -45,38 +47,38 @@ public class UserDTO {
             this.creationAccountDate = creationAccountDate;
         }
 
-        public Builder name(String name){
+        public Builder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder surname(String surname){
+        public Builder surname(String surname) {
             this.surname = surname;
             return this;
         }
 
-        public Builder email(String email){
+        public Builder email(String email) {
             this.email = email;
             return this;
         }
 
-        public Builder phoneNumber(String phoneNumber){
+        public Builder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
 
-        public Builder roles(String roles){
+        public Builder roles(String roles) {
             this.roles = roles;
             return this;
         }
 
-        public Builder permissions(String permissions){
+        public Builder permissions(String permissions) {
             this.permissions = permissions;
             return this;
         }
 
-        public UserDTO build(){
-            return new UserDTO(this);
+        public UserDto build() {
+            return new UserDto(this);
         }
     }
 }
